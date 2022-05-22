@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/sysinfo.h>
 #include <sys/vfs.h>
@@ -16,9 +17,12 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 #include <fcntl.h>
+#include <netdb.h>
 
 
 char IPSource[20]={0};
+char Hostname[256]="";
+
 int i2cd;
 
 // Init SSD1306
@@ -256,11 +260,19 @@ void LCD_DisplayTemperature(void)
   buffer[3]='\0';        
   
   OLED_Clear();                                        //Remove the interface
-  OLED_DrawBMP(0,0,128,4,BMP,TEMPERATURE_TYPE);
+  OLED_DrawBMP(0,0,128,4,BMP,TEMPERATURE_TYPE);        // Draw horizontal line below top output line
   if (IP_SWITCH == IP_DISPLAY_OPEN)
   {
-    strcpy(IPSource,GetIpAddress());   //Get the IP address of the device's wireless network card
-    OLED_ShowString(0,0,IPSource,8);          //Send the IP address to the lower machine
+    if (IPADDRESS_TYPE != HOSTNAME)
+    {
+      strcpy(IPSource,GetIpAddress());          //Get the IP address of the device's wireless network card
+      OLED_ShowString(0,0,IPSource,8);          //Send the IP address to the lower machine
+    }
+    else
+    {
+      //strcpy(Hostname,ObtainHostname());        //Get the hostname of the device
+      OLED_ShowString(0,0,Hostname,strlen(Hostname));          //Send the Hostname to the lower machine
+    }
   }
   else
   {
@@ -382,7 +394,7 @@ void LCD_DisplaySdMemory(void)
   }
 
 
-	unsigned long long freesize = blocksize*diskInfo.f_bfree; //Now let's figure out how much space we have left
+  unsigned long long freesize = blocksize*diskInfo.f_bfree; //Now let's figure out how much space we have left
   size=freesize>>30;
   size=MemSize-size;
   snprintf(usedsize_GB,7,"%d",size);
@@ -421,11 +433,17 @@ void LCD_Display(unsigned char symbol)
   }
 }
 
-
 void FirstGetIpAddress(void)
 {
   strcpy(IPSource,GetIpAddress());     
 }
+
+
+void FirstGetHostname(void)
+{
+  strcpy(Hostname,ObtainHostname());
+}
+
 
 char* GetIpAddress(void)
 {
@@ -476,3 +494,22 @@ char* GetIpAddress(void)
       return buffer;
     }
 }
+
+char* ObtainHostname(void)
+{
+    char *output = malloc(256);
+
+    char hostname[64] = "";
+    char *domainname;
+    struct hostent *hp;
+
+    gethostname(hostname, 192);
+    hp = gethostbyname(hostname);
+    strcat(output,hostname);
+    domainname = strchr(hp->h_name, '.');
+    if(domainname != NULL) {
+	strcat(output,domainname);
+    }
+    return output;
+}
+

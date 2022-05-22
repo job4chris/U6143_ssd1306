@@ -19,6 +19,7 @@ int main(void)
     }
     usleep(150*1000);                                                  //Short delay Ensure the normal response of the lower function
     FirstGetIpAddress();                        //Get IP address
+    FirstGetHostname();				//Get Hostname
     while(1)
     {
         LCD_Display(symbol);

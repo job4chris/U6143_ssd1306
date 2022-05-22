@@ -8,15 +8,16 @@ This library just support 128X32 lcd with i2c interface;
 extern int i2cd;
 
 /**********Select display temperature type**************/
-#define CELSIUS       0
-#define FAHRENHEIT    1
-#define TEMPERATURE_TYPE  FAHRENHEIT
+#define CELSIUS       1 
+#define FAHRENHEIT    0
+#define TEMPERATURE_TYPE  CELSIUS
 /**********Select display temperature type**************/
 
 /**********Select display network IP type**************/
-#define ETH0_ADDRESS    0
-#define WLAN0_ADDRESS   1
-#define IPADDRESS_TYPE  ETH0_ADDRESS
+#define ETH0_ADDRESS    0 
+#define WLAN0_ADDRESS   0
+#define HOSTNAME	1
+#define IPADDRESS_TYPE  HOSTNAME
 /**********Select display network IP type**************/
 
 
@@ -55,6 +56,8 @@ void LCD_Display(unsigned char symbol);
 void LCD_DisPlayCpuMemory(void);
 void LCD_DisplaySdMemory(void);
 void FirstGetIpAddress(void);
+void FirstGetHostname(void);
 char* GetIpAddress(void);
 unsigned char Obaintemperature(void);
+char* ObtainHostname(void);
 #endif				/* _SSD1306_I2C_H_ */
