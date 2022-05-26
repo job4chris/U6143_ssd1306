@@ -271,6 +271,8 @@ void LCD_DisplayTemperature(void)
     else
     {
       //strcpy(Hostname,ObtainHostname());        //Get the hostname of the device
+      char Buff[15] = "";
+      memcpy(Buff,&Hostname[0],15);
       OLED_ShowString(0,0,Hostname,strlen(Hostname));          //Send the Hostname to the lower machine
     }
   }
