@@ -1,0 +1,20 @@
+[Unit]
+Description=U6143 Display
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/display
+PrivateUsers=true
+User=root
+Group=root
+ProtectSystem=full
+protectHome=true
+ProtectKernelTunables=true
+ExecStart=/bin/sh -c '/opt/display/display'
+Restart=on-failure
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
+
+
